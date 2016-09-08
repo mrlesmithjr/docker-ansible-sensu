@@ -3,6 +3,13 @@
   become: true
   connection: local
   vars:
+    sensu_checks:
+      - name: 'test'
+        command: 'echo -n OK'
+        interval: 60
+        subscribers:
+          - 'test'
+        state: 'present'
   roles:
   tasks:
     - name: Checking For RabbitMQ Connection
@@ -24,3 +31,12 @@
       template:
         src: "/uchiwa.json.j2"
         dest: "/etc/sensu/uchiwa.json"
+
+    - name: Managing Sensu Checks
+      sensu_check:
+        name: "{{ item.name }}"
+        command: "{{ item.command }}"
+        interval: "{{ item.interval }}"
+        subscribers: "{{ item.subscribers|join (',')}}"
+        state: "{{ item.state }}"
+      with_items: '{{ sensu_checks }}'

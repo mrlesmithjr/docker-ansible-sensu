@@ -27,15 +27,6 @@
       "command": "cat"
     }
   },
-  "checks": {
-    "test": {
-      "command": "echo -n OK",
-      "subscribers": [
-        "test"
-      ],
-      "interval": 60
-    }
-  },
   "client": {
     "name": "{{ ansible_hostname }}",
     "address": "127.0.0.1",
