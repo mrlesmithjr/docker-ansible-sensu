@@ -2,7 +2,7 @@ FROM mrlesmithjr/ubuntu-ansible:16.04
 
 MAINTAINER Larry Smith Jr. <mrlesmithjr@gmail.com>
 
-ENV SENSU_VER="0.26.1-1"
+ENV SENSU_VER="0.26.0-1"
 
 # Copy Ansible Playbook
 COPY playbook.yml /playbook.yml
