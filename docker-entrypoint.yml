@@ -4,6 +4,13 @@
   connection: local
   vars:
     sensu_checks:
+      - name: 'cpu'
+        command: 'check-cpu.rb'
+        interval: 60
+        subscribers:
+          - 'test'
+          - 'ALL'
+        state: 'present'
       - name: 'disk-usage'
         command: 'check-disk-usage.rb -w 80 -c 90'
         interval: 60
