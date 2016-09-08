@@ -4,12 +4,34 @@
   connection: local
   vars:
     sensu_checks:
+      - name: 'disk-usage'
+        command: 'check-disk-usage.rb -w 80 -c 90'
+        interval: 60
+        subscribers:
+          - 'test'
+          - 'ALL'
+        state: 'present'
+      - name: 'memory'
+        command: 'check-memory.rb -w 2500 -c 3000'
+        interval: 60
+        subscribers:
+          - 'test'
+          - 'ALL'
+        state: 'present'
+      - name: 'memory-percent'
+        command: 'check-memory-percent.rb -w 70 -c 80'
+        interval: 60
+        subscribers:
+          - 'test'
+          - 'ALL'
+        state: 'present'
       - name: 'test'
         command: 'echo -n OK'
         interval: 60
         subscribers:
           - 'test'
-        state: 'present'
+          - 'ALL'
+    state: 'present'
   roles:
   tasks:
     - name: Checking For RabbitMQ Connection

@@ -5,11 +5,14 @@
   vars:
     gosu_ver: '1.9'
     sensu_plugins:
-      - json
-      - mail
-      - redis
-      - rest-client
-      - sensu-plugin
+      - 'json'
+      - 'mail'
+      - 'redis'
+      - 'rest-client'
+      - 'sensu-plugin'
+      - 'sensu-plugins-cpu-checks'
+      - 'sensu-plugins-disk-checks'
+      - 'sensu-plugins-memory-checks'
     sensu_repo: 'deb https://sensu.global.ssl.fastly.net/apt sensu main'
     sensu_repo_key: 'https://sensu.global.ssl.fastly.net/apt/pubkey.gpg'
   roles:
