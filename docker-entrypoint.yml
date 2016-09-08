@@ -19,7 +19,7 @@
           - 'ALL'
         state: 'present'
       - name: 'memory'
-        command: 'check-memory.rb -w 2500 -c 3000'
+        command: 'check-memory.rb'
         interval: 60
         subscribers:
           - 'test'
