@@ -9,6 +9,7 @@ COPY playbook.yml /playbook.yml
 
 COPY docker-entrypoint.yml /docker-entrypoint.yml
 COPY config.json.j2 /config.json.j2
+COPY uchiwa.json.j2 /uchiwa.json.j2
 
 # Run Ansible playbook
 RUN ansible-playbook -i "localhost," -c local /playbook.yml \
