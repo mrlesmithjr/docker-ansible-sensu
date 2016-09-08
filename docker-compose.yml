@@ -1,0 +1,34 @@
+version: '2'
+services:
+  rabbitmq:
+    build: "./RabbitMQ"
+    image: "rabbitmq"
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "25672:25672"
+    restart: "always"
+
+  redis:
+    image: "mrlesmithjr/redis"
+    ports:
+      - "6379:6379"
+    restart: "always"
+
+  sensu:
+    build: "./"
+    image: "sensu"
+    depends_on:
+      - "rabbitmq"
+      - "redis"
+    environment:
+      RABBITMQ_HOST: "rabbitmq"
+      REDIS_HOST: "redis"
+    links:
+      - "rabbitmq"
+      - "redis"
+    ports:
+      - "3000:3000"
+      - "4567:4567"
+    restart: "always"

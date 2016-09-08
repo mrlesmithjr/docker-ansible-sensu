@@ -1,0 +1,62 @@
+---
+- hosts: localhost
+  become: true
+  connection: local
+  vars:
+    gosu_ver: '1.9'
+    rabbitmq_repo: 'deb http://www.rabbitmq.com/debian/ testing main'
+    rabbitmq_repo_key: 'https://www.rabbitmq.com/rabbitmq-release-signing-key.asc'
+  roles:
+  tasks:
+    - name: Installing apt-transport-https
+      apt:
+        name: "apt-transport-https"
+        state: "present"
+
+    - name: Installing ca-certificates
+      apt:
+        name: "ca-certificates"
+        state: "latest"
+
+    - name: Installing dumb-init
+      apt:
+        deb: "https://github.com/Yelp/dumb-init/releases/download/v1.0.2/dumb-init_1.0.2_amd64.deb"
+
+    - name: Installing gosu
+      get_url:
+        url: "https://github.com/tianon/gosu/releases/download/{{ gosu_ver }}/gosu-amd64"
+        dest: "/usr/local/bin/gosu"
+        mode: 0755
+
+    - name: Installing RabbitMQ Pre-Reqs
+      apt:
+        name: "{{ item }}"
+        state: "present"
+      with_items:
+        - 'socat'
+
+    - name: Adding RabbitMQ Repo Key
+      apt_key:
+        url: "{{ rabbitmq_repo_key }}"
+        state: "present"
+
+    - name: Adding RabbitMQ Repo
+      apt_repository:
+        repo: "{{ rabbitmq_repo }}"
+        state: "present"
+
+    - name: Installing RabbitMQ
+      apt:
+        name: "rabbitmq-server"
+        state: "present"
+        install_recommends: false
+
+    - name: Starting RabbitMQ
+      service:
+        name: "rabbitmq-server"
+        state: "started"
+
+    - name: Installing RabbitMQ Plugins
+      rabbitmq_plugin:
+        names: "rabbitmq_management"
+        state: "enabled"

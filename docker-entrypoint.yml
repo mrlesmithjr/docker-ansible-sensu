@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  become: true
+  connection: local
+  vars:
+  roles:
+  tasks:
+    - name: Checking For RabbitMQ Connection
+      wait_for:
+        port: 5672
+        host: rabbitmq
+
+    - name: Checking For Redis Connection
+      wait_for:
+        port: 6379
+        host: redis
+
+    - name: Configuring Sensu
+      template:
+        src: "/config.json.j2"
+        dest: "/etc/sensu/config.json"

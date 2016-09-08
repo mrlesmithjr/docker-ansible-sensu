@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  become: true
+  connection: local
+  vars:
+    sensu_rabbitmq_info:
+      user: 'sensu'
+      password: 'sensu'
+      vhost: '/sensu'
+  roles:
+  tasks:
+    - name: Checking For RabbitMQ Connection
+      wait_for:
+        port: 5672
+        host: localhost
+
+    - name: Creating Sensu RabbitMQ vhost
+      rabbitmq_vhost:
+        name: "{{ sensu_rabbitmq_info.vhost }}"
+        state: present
+
+    - name: Creating Sensu RabbitMQ User
+      rabbitmq_user:
+        user: "{{ sensu_rabbitmq_info.user }}"
+        password: "{{ sensu_rabbitmq_info.password }}"
+        vhost: "{{ sensu_rabbitmq_info.vhost }}"
+        configure_priv: ".*"
+        read_priv: ".*"
+        write_priv: ".*"
+        state: present

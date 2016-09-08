@@ -1,0 +1,72 @@
+---
+- hosts: localhost
+  become: true
+  connection: local
+  vars:
+    gosu_ver: '1.9'
+    sensu_plugins:
+      - json
+      - mail
+      - redis
+      - rest-client
+      - sensu-plugin
+    sensu_repo: 'deb https://sensu.global.ssl.fastly.net/apt sensu main'
+    sensu_repo_key: 'https://sensu.global.ssl.fastly.net/apt/pubkey.gpg'
+  roles:
+  tasks:
+    - name: Installing apt-transport-https
+      apt:
+        name: "apt-transport-https"
+        state: "present"
+
+    - name: Installing ca-certificates
+      apt:
+        name: "ca-certificates"
+        state: "latest"
+
+    - name: Installing dumb-init
+      apt:
+        deb: "https://github.com/Yelp/dumb-init/releases/download/v1.0.2/dumb-init_1.0.2_amd64.deb"
+
+    - name: Installing gosu
+      get_url:
+        url: "https://github.com/tianon/gosu/releases/download/{{ gosu_ver }}/gosu-amd64"
+        dest: "/usr/local/bin/gosu"
+        mode: 0755
+
+    - name: Installing Sensu Pre-Reqs
+      apt:
+        name: "{{ item }}"
+        state: "present"
+      with_items:
+        - 'build-essential'
+        - 'ruby2.3'
+        - 'ruby2.3-dev'
+
+    - name: Adding Sensu Repo Key
+      apt_key:
+        url: "{{ sensu_repo_key }}"
+        state: "present"
+
+    - name: Adding Sensu Repo
+      apt_repository:
+        repo: "{{ sensu_repo }}"
+        state: "present"
+
+    - name: Installing Sensu
+      apt:
+        name: "sensu={{ sensu_ver }}"
+        state: "present"
+        install_recommends: false
+
+    - name: Installing Uchiwa
+      apt:
+        name: "uchiwa"
+        state: "present"
+
+    - name: Installing Sensu Plugins
+      gem:
+        name: "{{ item }}"
+        user_install: no
+        state: latest
+      with_items: '{{ sensu_plugins }}'

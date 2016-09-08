@@ -1,0 +1,50 @@
+{
+  "rabbitmq": {
+    "host": "{{ rabbitmq_host }}",
+    "port": 5672,
+    "user": "sensu",
+    "password": "sensu",
+    "vhost": "/sensu"
+  },
+  "redis": {
+    "host": "{{ redis_host }}",
+    "port": 6379
+  },
+  "api": {
+    "host": "127.0.0.1",
+    "port": 4567
+  },
+  "handlers": {
+    "default": {
+      "type": "set",
+      "handlers": [
+        "stdout"
+      ]
+    },
+    "stdout": {
+      "type": "pipe",
+      "command": "cat"
+    }
+  },
+  "checks": {
+    "test": {
+      "command": "echo -n OK",
+      "subscribers": [
+        "test"
+      ],
+      "interval": 60
+    }
+  },
+  "client": {
+    "name": "{{ ansible_hostname }}",
+    "address": "127.0.0.1",
+    "subscriptions": [
+      "test"
+    ]
+  },
+  "uchiwa": {
+    "port": 3000,
+    "stats": 10,
+    "refresh": 10000
+  }
+}
