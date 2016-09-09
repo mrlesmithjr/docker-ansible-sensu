@@ -37,6 +37,16 @@
         dest: "/usr/local/bin/gosu"
         mode: 0755
 
+    - name: Installing Pre-Reqs
+      apt:
+        name: "{{ item }}"
+        state: "present"
+        install_recommends: no
+      with_items:
+        - 'cron'
+        - 'rsyslog'
+        - 'supervisor'
+
     - name: Installing Sensu Pre-Reqs
       apt:
         name: "{{ item }}"

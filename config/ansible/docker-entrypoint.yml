@@ -38,7 +38,7 @@
         subscribers:
           - 'test'
           - 'ALL'
-    state: 'present'
+        state: 'present'
   roles:
   tasks:
     - name: Checking For RabbitMQ Connection

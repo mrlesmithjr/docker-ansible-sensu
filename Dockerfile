@@ -4,12 +4,8 @@ MAINTAINER Larry Smith Jr. <mrlesmithjr@gmail.com>
 
 ENV SENSU_VER="0.26.1-1"
 
-# Copy Ansible Playbook
-COPY playbook.yml /playbook.yml
-
-COPY docker-entrypoint.yml /docker-entrypoint.yml
-COPY config.json.j2 /config.json.j2
-COPY uchiwa.json.j2 /uchiwa.json.j2
+# Copy Ansible Related Files
+COPY config/ansible/ /
 
 # Run Ansible playbook
 RUN ansible-playbook -i "localhost," -c local /playbook.yml \
@@ -23,7 +19,10 @@ RUN apt-get -y clean && \
 # Copy Docker Entrypoint
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+COPY config/supervisord/*.conf /etc/supervisor/conf.d/
 
 # Expose ports
 EXPOSE 3000 4567
